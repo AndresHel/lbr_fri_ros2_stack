@@ -110,7 +110,7 @@ class LBRROS2ControlMixin:
             ],
             **kwargs,
         )
-
+    """
     @staticmethod
     def node_controller_spawner(
         robot_name: Optional[Union[LaunchConfiguration, str]] = LaunchConfiguration(
@@ -119,6 +119,9 @@ class LBRROS2ControlMixin:
         controller: Optional[Union[LaunchConfiguration, str]] = LaunchConfiguration(
             "ctrl"
         ),
+        controller_manager: Optional[
+            Union[LaunchConfiguration, str]
+        ] = LaunchConfiguration("controller_manager", default="controller_manager"),
         **kwargs,
     ) -> Node:
         return Node(
@@ -128,11 +131,41 @@ class LBRROS2ControlMixin:
             arguments=[
                 controller,
                 "--controller-manager",
-                "controller_manager",
+                controller_manager,
             ],
-            namespace=robot_name,
+            namespace= "", #robot_name,
+            **kwargs,
+        )"""
+
+    @staticmethod
+    def node_controller_spawner(
+        robot_name: Optional[Union[LaunchConfiguration, str]] = LaunchConfiguration(
+            "robot_name", default="lbr"
+        ),
+        controller: Optional[Union[LaunchConfiguration, str]] = LaunchConfiguration(
+            "ctrl"
+        ),
+        controller_manager: Optional[
+            Union[LaunchConfiguration, str]
+        ] = LaunchConfiguration("controller_manager", default="controller_manager"),
+        namespace: Optional[Union[LaunchConfiguration, str]] = "",
+        **kwargs,
+    ) -> Node:
+        return Node(
+            package="controller_manager",
+            executable="spawner",
+            output="screen",
+            arguments=[
+                controller,
+                "--controller-manager",
+                controller_manager,
+            ],
+            namespace=namespace,
             **kwargs,
         )
+
+
+
 
     @staticmethod
     def node_robot_state_publisher(
