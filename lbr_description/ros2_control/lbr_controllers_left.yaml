@@ -1,0 +1,115 @@
+/**/controller_manager:
+  ros__parameters:
+    update_rate: 100
+
+    # ROS 2 control broadcasters
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+    force_torque_broadcaster:
+      type: force_torque_sensor_broadcaster/ForceTorqueSensorBroadcaster
+
+    # LBR ROS 2 control broadcasters
+    lbr_state_broadcaster:
+      type: lbr_ros2_control/LBRStateBroadcaster
+
+    # ROS 2 control controllers
+    joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    forward_position_controller:
+      type: position_controllers/JointGroupPositionController
+
+    # LBR ROS 2 control controllers
+    admittance_controller:
+      type: lbr_ros2_control/AdmittanceController
+    lbr_joint_position_command_controller:
+      type: lbr_ros2_control/LBRJointPositionCommandController
+    lbr_torque_command_controller:
+      type: lbr_ros2_control/LBRTorqueCommandController
+    lbr_wrench_command_controller:
+      type: lbr_ros2_control/LBRWrenchCommandController
+    twist_controller:
+      type: lbr_ros2_control/TwistController
+
+# ==============================================================================
+# LEFT ARM CONFIGURATIONS (Namespace: /iiwa_left)
+# ==============================================================================
+/iiwa_left/force_torque_broadcaster:
+  ros__parameters:
+    frame_id: iiwa_left_link_ee
+    sensor_name: estimated_ft_sensor
+
+/iiwa_left/lbr_state_broadcaster:
+  ros__parameters:
+    robot_name: iiwa_left
+
+/iiwa_left/lbr_joint_position_command_controller:
+  ros__parameters:
+    robot_name: iiwa_left
+
+/iiwa_left/lbr_torque_command_controller:
+  ros__parameters:
+    robot_name: iiwa_left
+
+/iiwa_left/lbr_wrench_command_controller:
+  ros__parameters:
+    robot_name: iiwa_left
+
+/iiwa_left/joint_trajectory_controller:
+  ros__parameters:
+    joints:
+      - iiwa_left_A1
+      - iiwa_left_A2
+      - iiwa_left_A3
+      - iiwa_left_A4
+      - iiwa_left_A5
+      - iiwa_left_A6
+      - iiwa_left_A7
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+    state_publish_rate: 50.0
+    action_monitor_rate: 20.0
+
+/iiwa_left/forward_position_controller:
+  ros__parameters:
+    joints:
+      - iiwa_left_A1
+      - iiwa_left_A2
+      - iiwa_left_A3
+      - iiwa_left_A4
+      - iiwa_left_A5
+      - iiwa_left_A6
+      - iiwa_left_A7
+    interface_name: position
+
+/iiwa_left/admittance_controller:
+  ros__parameters:
+    robot_name: iiwa_left
+    admittance:
+      mass: [0.01, 0.01, 0.01, 0.01, 0.01, 0.01]
+      damping: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+      stiffness: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    inv_jac_ctrl:
+      chain_root: iiwa_left_link_0
+      chain_tip: iiwa_left_link_ee
+      damping: 0.2
+      max_linear_velocity: 2.0
+      max_angular_velocity: 2.0
+      joint_gains: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+      cartesian_gains: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+
+/iiwa_left/twist_controller:
+  ros__parameters:
+    robot_name: iiwa_left
+    inv_jac_ctrl:
+      chain_root: iiwa_left_link_0
+      chain_tip: iiwa_left_link_ee
+      twist_in_tip_frame: true
+      damping: 0.02
+      max_linear_velocity: 0.1
+      max_angular_velocity: 0.1
+      joint_gains: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+      cartesian_gains: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    timeout: 0.2
